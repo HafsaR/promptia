@@ -10,8 +10,9 @@ const handler = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
+  callbacks: {
   async session({ session }) {
-    const sessionUser = await User.findone({
+    const sessionUser = await User.findOne({
       email: session.user.email,
     });
     session.user.id = sessionUser._id.toString();
@@ -30,8 +31,8 @@ const handler = NextAuth({
       if (!userExists) {
         await User.create({
           email: profile.email,
-          username: profile.username.replace(" ", "").toLowerCase(),
-          image: profile.image,
+          username: profile.name.replace(" ", "").toLowerCase(),
+          image: profile.picture,
         });
       }
 
@@ -40,6 +41,7 @@ const handler = NextAuth({
       console.log(error);
       return false;
     }
+  },
   },
 });
 
