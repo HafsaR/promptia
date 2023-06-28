@@ -2,22 +2,27 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 import Profile from "@components/profile";
 
 const MyProfile = () => {
+
+  const router = useRouter();
+
   const {data: session} = useSession();
   const [posts, setPosts] = useState([])
 
-  const handleEdit = () => {};
+  const handleEdit = (post) => {
+    router.push(`/update-prompt?id=${post._id}`)
+  };
 
   const handleDelete = async () => {};
 
   useEffect(() => {
     const fetchPost = async () => {
-      const response = await fetch(`/api/[users]/${session?.user.id}/posts`);
+      const response = await fetch(`/api/users/${session?.user.id}/posts`);
       const data = await response.json();
-      setPost(data);
+      setPosts(data);
     };
    if(session?.user.id) fetchPost();
   }, []);
